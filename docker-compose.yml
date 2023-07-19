@@ -17,8 +17,16 @@ services:
     image: dietermarno/thomasgregcorewebapi:dev
     hostname: wepapi
     ports:
+      - "5000:80"
       - "5001:443"
-    restart: always
+    environment:
+      - ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=5001
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - NUGET_PACKAGES=/root/.nuget/fallbackpackages2
+      - NUGET_FALLBACK_PACKAGES=/root/.nuget/fallbackpackages;/root/.nuget/fallbackpackages2
     depends_on:
       - sql
     networks:
