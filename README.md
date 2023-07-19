@@ -40,10 +40,12 @@ Em um esquipamento com Visual Studio 2022 instalado e Docker Engine versão 24.0
 ▪ Abra a solução thomasgregcorewebapi.sln.\
 ▪ Abra a solução thomasgregmvc.sln.\
 ▪ Para executar o SQL Server, a partir de uma janela CMD ou PowerShell execute:
+
 ```bash
-docker pull dietermarno/thomasgregmssql:data\
+docker pull dietermarno/thomasgregmssql:data
 docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=R353t3282@" -p 1433:1433 -d dietermarno/thomasgregmssql:data
 ```bash
+
 ▪ Execute a aplicação thomasgregcorewebapi utilizando o perfil "Docker"
 ▪ Execute a aplicação thomasgregmvc utilizando o perfil "Docker"
 ▪ Duas janelas de navegação serão abertas automaticamente, exibindo o mapa de funções da API e o cliente MVC de gerenciamento de registros.
