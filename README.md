@@ -3,7 +3,7 @@ Teste prático Thomas Greg
 
 Demonstração de cliente MVC suportado por API RestFul com armazenamento em banco de dados relacional Microsoft MS-SQL.
 
-## Instalação
+## Instalação (ainda indisponível)
 
 Para executar é necessário ambiente com Docker Engine versão 24.0.2 or superior em execução.
 Para iniciar basta executar docker compose a partir de um prompt PowerShell utilizando o seguinte comando na pasta raiz do projeto: 
@@ -12,12 +12,12 @@ Para iniciar basta executar docker compose a partir de um prompt PowerShell util
 docker compose up -d
 ```
 
-## Utilização
+## Utilização (ainda indisponível)
 
 No mesmo ambiente, inicie seu navegador internet e digite o seguinte endereço:
 
 ```bash
-https://localhost:32772/
+https://localhost:4200/
 ```
 
 ## Lista de pendências
