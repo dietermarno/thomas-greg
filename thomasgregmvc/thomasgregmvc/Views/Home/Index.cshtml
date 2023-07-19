@@ -1,0 +1,33 @@
+﻿@using thomasgregmvc.Models
+@model List<thomasgregmvc.Models.Customer>
+@{
+    ViewData["Title"] = "Customer Register";
+}
+
+<div class="text-left">
+    <h1 class="display-4">Customer Register</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Logo</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Customer customer in Model)
+            {
+                <tr>
+                    <td><a asp-area="" asp-controller="Home" asp-action="UpdateCustomer" asp-route-id="@customer.Id">@customer.Name</a></td>
+                    <td>@customer.Email</td>
+                    <td><img src="@customer.Logo" width="100"/></td>
+                    <td><a asp-area="" asp-controller="Home" asp-action="DeleteCustomer" asp-route-id="@customer.Id">Delete</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="pt-3 pb-3">
+        <button class="btn btn-primary" onclick="location.href='@Url.Action("AddCustomer", "Home")'">Add Customer</button>
+    </div>
+</div>

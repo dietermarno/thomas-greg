@@ -1,0 +1,29 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  sql:
+    container_name: mssql
+    image: dietermarno/thomasgregmssql:data
+    hostname: mssql
+    restart: always
+    ports:
+      - "1433:1433" 
+    environment:
+      - ACCEPT_EULA=y
+      - SA_PASSWORD=R353t3282@
+    networks:
+      - dockerhost
+  web_api:
+    container_name: wepapi
+    image: dietermarno/thomasgregcorewebapi:dev
+    hostname: wepapi
+    ports:
+      - "5001:443"
+    restart: always
+    depends_on:
+      - sql
+    networks:
+      - dockerhost
+networks:
+  dockerhost:
+    driver: bridge
+    name: thomasgreg
