@@ -13,14 +13,25 @@ namespace thomasgregcorewebapi.Repositories
         {
             context = repositoryContext;
         }
+
         public async Task<IEnumerable<CustomerAddress>> GetAllAddresses()
         {
             return await context.CustomerAddresses.AsNoTracking().ToListAsync();
         }
 
-        public async Task<IEnumerable<CustomerAddress>> GetCustomerAddresses(int customerId)
+        public async Task<IEnumerable<CustomerAddress>> GetCustomerAddresses(int id)
         {
-            return await context.CustomerAddresses.Where(address => address.CustomerId == customerId).AsNoTracking().ToListAsync();
+            return await context.CustomerAddresses.Where(address => address.CustomerId == id).AsNoTracking().ToListAsync();
+        }
+
+        public async Task<IEnumerable<Customer>> GetCustomersAddresses(List<Customer> customers)
+        {
+            foreach (Customer customer in customers)
+            {
+                customer.CustomerAddresses = await context.CustomerAddresses
+                    .Where(address => address.CustomerId == customer.Id).AsNoTracking().ToListAsync();
+            };
+            return customers;
         }
     }
 }

@@ -35,4 +35,28 @@
             </form>
         </div>
     </div>
+    <h1 class="display-4 pt-5">Addresses</h1>
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Street</th>
+                    <th>Number</th>
+                    <th>Complement</th>
+                    <th>ZipCode</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (CustomerAddress address in Model.CustomerAddresses)
+                {
+                    <tr>
+                        <td>@address.Street</td>
+                        <td>@address.Number</td>
+                        <td>@address.Complement</td>
+                        <td>@address.ZipCode</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

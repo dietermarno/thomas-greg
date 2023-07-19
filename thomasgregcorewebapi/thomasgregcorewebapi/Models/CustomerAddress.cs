@@ -8,7 +8,5 @@
         public string? Number { get; set; }
         public string? Complement { get; set; }
         public string? ZipCode { get; set; }
-
-        public virtual Customer? Customer { get; set; }
     }
 }

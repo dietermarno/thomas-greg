@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using thomasgregcorewebapi.Repositories;
+using Microsoft.EntityFrameworkCore;
 using thomasgregcorewebapi.Models;
-using Microsoft.AspNetCore.Authorization;
+using thomasgregcorewebapi.Repositories;
 
 namespace thomasgregcorewebapi.Controllers
 {
@@ -12,6 +12,7 @@ namespace thomasgregcorewebapi.Controllers
     public class CustomersAddressesController : Controller
     {
         private readonly ICustomerAddressesRepository repository;
+
         public CustomersAddressesController(ICustomerAddressesRepository _context)
         {
             repository = _context;
@@ -28,13 +29,24 @@ namespace thomasgregcorewebapi.Controllers
             return Ok(customersAddresses.ToList());
         }
 
-        [HttpGet("GetAddresses/{customerId}")]
-        public async Task<ActionResult<IEnumerable<CustomerAddress>>> GetCustomerAddresses(int customerId)
+        [HttpGet("GetCustomerAddresses/{id}")]
+        public async Task<ActionResult<IEnumerable<CustomerAddress>>> GetCustomerAddresses(int id)
         {
-            var customersAddresses = await repository.GetCustomerAddresses(customerId);
+            var customersAddresses = await repository.GetCustomerAddresses(id);
             if (customersAddresses == null)
             {
-                return NotFound($"No addresses found for customer Id {customerId}");
+                return NotFound($"No addresses found for customer id {id}");
+            }
+            return Ok(customersAddresses.ToList());
+        }
+
+        [HttpPost("GetCustomersAddresses")]
+        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomersAddresses(List<Customer> customers)
+        {
+            var customersAddresses = await repository.GetCustomersAddresses(customers);
+            if (customersAddresses == null)
+            {
+                return NotFound($"No addresses found for customer list");
             }
             return Ok(customersAddresses.ToList());
         }
@@ -50,7 +62,6 @@ namespace thomasgregcorewebapi.Controllers
             return Ok(customerAddress);
         }
 
-        // POST api/<controller>  
         [HttpPost]
         public async Task<IActionResult> PostCustomerAddress([FromBody] CustomerAddress customerAddress)
         {
@@ -81,7 +92,7 @@ namespace thomasgregcorewebapi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<CustomerAddress>> DeleteCustomer(int id)
+        public async Task<ActionResult<CustomerAddress>> DeleteCustomerAddress(int id)
         {
             var customerAddress = await repository.GetById(id);
             if (customerAddress == null)
@@ -90,6 +101,17 @@ namespace thomasgregcorewebapi.Controllers
             }
             await repository.Delete(id);
             return Ok(customerAddress);
+        }
+
+        [HttpDelete("DeleteAllAddresses/{id}")]
+        public async Task<ActionResult<Customer>> DeleteAllCustomerAddress(int id)
+        {
+            var customerAddresses = await repository.GetCustomerAddresses(id);
+            foreach (CustomerAddress address in customerAddresses)
+            {
+                await repository.Delete(address.Id);
+            }
+            return Ok($"Addresses removed: {customerAddresses.Count()}");
         }
     }
 }

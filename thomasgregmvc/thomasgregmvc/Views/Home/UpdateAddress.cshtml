@@ -1,0 +1,36 @@
+﻿@using thomasgregmvc.Models
+@model thomasgregmvc.Models.CustomerAddress
+@{
+    ViewData["Title"] = "Update a Address";
+}
+<div class="text-left">
+    <h1 class="display-4">Update a Address</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="UpdateAddressApply">
+                <div class="form-group pt-3">
+                    <input asp-for="Id" class="form-control" hidden />
+                    <input asp-for="CustomerId" class="form-control" hidden />
+                    <label asp-for="Street" class="control-label"></label>
+                    <input asp-for="Street" class="form-control" />
+                </div>
+                <div class="form-group pt-3">
+                    <label asp-for="Number" class="control-label"></label>
+                    <input asp-for="Number" class="form-control" />
+                </div>
+                <div class="form-group pt-3">
+                    <label asp-for="Complement" class="control-label"></label>
+                    <input asp-for="Complement" class="form-control" />
+                </div>
+                <div class="form-group pt-3">
+                    <label asp-for="ZipCode" class="control-label"></label>
+                    <input asp-for="ZipCode" class="form-control" />
+                </div>
+                <div class="form-group pt-3">
+                    <input type="submit" value="Update Address" class="btn btn-primary" />
+                    <a asp-action="UpdateCustomer" asp-controller="Home" asp-route-id="@Model.CustomerId" class="btn btn-primary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

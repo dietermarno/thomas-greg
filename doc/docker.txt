@@ -5,6 +5,9 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=R353t3282@" -p 1433:1433 -d 
 docker pull dietermarno/thomasgregmssql:data
 docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=R353t3282@" -p 1433:1433 -d dietermarno/thomasgregmssql:data
 
+Atualizar imagem a partir do container:
+docker commit containerid dietermarno/thomasgregmssql:data
+
 Se houver erro "requested access to the resource is denied":
 Antes de subir a imagem da aplicação:
 	docker tag image_name YOUR_DOCKERHUB_NAME/image_name

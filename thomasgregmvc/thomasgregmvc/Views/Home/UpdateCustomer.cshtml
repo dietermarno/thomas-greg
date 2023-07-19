@@ -12,6 +12,7 @@
                 <input asp-for="Id" class="form-control" hidden />
                 <div class="form-group pt-3">
                     <label asp-for="Name" class="control-label"></label>
+                    <label asp-for="CustomerAddresses" class="control-label"></label>
                     <input asp-for="Name" class="form-control" />
                 </div>
                 <div class="form-group pt-3">
@@ -36,6 +37,35 @@
                     <input type="button" value="Cancel" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Home")'" />
                 </div>
             </form>
+        </div>
+        <h1 class="display-4 pt-5">Addresses</h1>
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Street</th>
+                        <th>Number</th>
+                        <th>Complement</th>
+                        <th>ZipCode</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (CustomerAddress address in Model.CustomerAddresses)
+                    {
+                        <tr>
+                            <td><a asp-area="" asp-controller="Home" asp-action="UpdateAddress" asp-route-id="@address.Id">@address.Street</a></td>
+                            <td>@address.Number</td>
+                            <td>@address.Complement</td>
+                            <td>@address.ZipCode</td>
+                            <td><a asp-area="" asp-controller="Home" asp-action="DeleteAddress" asp-route-id="@address.Id">Delete</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="pt-3 pb-3">
+                <a asp-action="AddAddress" asp-controller="Home" asp-route-id="@Model.Id" class="btn btn-primary">Add Address</a>
+            </div>
         </div>
     </div>
     <script src="~/js/upload.js"></script>

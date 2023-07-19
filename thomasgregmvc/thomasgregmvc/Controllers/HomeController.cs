@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
 using System.Diagnostics;
 using System.Net.Http.Headers;
 using thomasgregmvc.Models;
@@ -91,6 +90,48 @@ namespace thomasgregmvc.Controllers
             }
         }
 
+        private async Task<CustomerAddress> GetAddress(int id)
+        {
+            using (var httpClientHandler = new HttpClientHandler())
+            {
+                httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+                using (var client = new HttpClient(httpClientHandler))
+                {
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    HttpResponseMessage response = await client.GetAsync($"api/CustomersAddresses/GetAddress/{id}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return response.Content.ReadFromJsonAsync<CustomerAddress>().Result;
+                    }
+                    return new CustomerAddress();
+                }
+            }
+        }
+
+        private async Task<List<CustomerAddress>> GetCustomerAddresses(int id)
+        {
+            using (var httpClientHandler = new HttpClientHandler())
+            {
+                httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+                using (var client = new HttpClient(httpClientHandler))
+                {
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    HttpResponseMessage response = await client.GetAsync($"api/CustomersAddresses/GetCustomerAddresses/{id}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return response.Content.ReadFromJsonAsync<List<CustomerAddress>>().Result;
+                    }
+                    return new List<CustomerAddress>();
+                }
+            }
+        }
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -177,11 +218,101 @@ namespace thomasgregmvc.Controllers
             return View();
         }
 
+        public async Task<IActionResult> AddAddress(int id)
+        {
+            CustomerAddress newAddress = new CustomerAddress();
+            newAddress = new CustomerAddress()
+            {
+                CustomerId = id,
+                Street = null,
+                Complement = null,
+                ZipCode = null
+            };
+            return View(newAddress);
+        }
+
+        public async Task<IActionResult> AddAddressApply(CustomerAddress address)
+        {
+            if (address.Street != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    CustomerAddress newAddress = new CustomerAddress()
+                    {
+                        Street = address.Street,
+                        Number = address.Number,
+                        Complement = address.Complement,
+                        ZipCode = address.ZipCode,
+                        CustomerId = address.CustomerId
+                    };
+                    using (var httpClientHandler = new HttpClientHandler())
+                    {
+                        httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+                        using (var client = new HttpClient(httpClientHandler))
+                        {
+                            client.BaseAddress = new Uri(baseUrl);
+                            client.DefaultRequestHeaders.Clear();
+                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                            HttpResponseMessage response = await client.PostAsJsonAsync("api/CustomersAddresses", newAddress);
+                            if (response.IsSuccessStatusCode)
+                            {
+                                return RedirectToAction("UpdateCustomer", new { id = newAddress.CustomerId });
+                            }
+                            else
+                            {
+                                Error();
+                            }
+                            return View();
+                        }
+                    }
+                }
+            }
+            return View(address);
+        }
+
+        public async Task<IActionResult> UpdateAddress(int id)
+        {
+            if (id != null)
+            {
+                CustomerAddress address = GetAddress(id).Result;
+                return View(address);
+            }
+            return View();
+        }
+
+        public async Task<IActionResult> UpdateAddressApply(CustomerAddress address)
+        {
+            using (var httpClientHandler = new HttpClientHandler())
+            {
+                httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+                using (var client = new HttpClient(httpClientHandler))
+                {
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    HttpResponseMessage response = await client.PutAsJsonAsync($"api/CustomersAddresses/{address.Id}", address);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("UpdateCustomer", new { id = address.CustomerId });
+                    }
+                    else
+                    {
+                        Error();
+                    }
+                    return View();
+                }
+            }
+            return View();
+        }
+
         public async Task<IActionResult> UpdateCustomer(int id)
         {
             if (id != null)
             {
                 Customer newCustomer = GetCustomer(id).Result;
+                newCustomer.CustomerAddresses = GetCustomerAddresses(id).Result;
                 return View(newCustomer);
             }
             return View();
@@ -232,12 +363,52 @@ namespace thomasgregmvc.Controllers
             return View();
         }
 
+        public async Task<IActionResult> DeleteAddress(int id)
+        {
+            if (id != null)
+            {
+                CustomerAddress address = GetAddress(id).Result;
+                return View(address);
+            }
+            return View();
+        }
+
+        public async Task<IActionResult> DeleteAddressApply(CustomerAddress address)
+        {
+            if (address.Id != null)
+            {
+                using (var httpClientHandler = new HttpClientHandler())
+                {
+                    httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+                    using (var client = new HttpClient(httpClientHandler))
+                    {
+                        client.BaseAddress = new Uri(baseUrl);
+                        client.DefaultRequestHeaders.Clear();
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        HttpResponseMessage response = await client.DeleteAsync($"api/CustomersAddresses/{address.Id}");
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return RedirectToAction("UpdateCustomer", new { id = address.CustomerId });
+                        }
+                        else
+                        {
+                            Error();
+                        }
+                        return View();
+                    }
+                }
+            }
+            return View();
+        }
+
         public async Task<IActionResult> DeleteCustomer(int id)
         {
             if (id != null)
             {
-                Customer newCustomer = GetCustomer(id).Result;
-                return View(newCustomer);
+                Customer customer = GetCustomer(id).Result;
+                customer.CustomerAddresses = GetCustomerAddresses(id).Result;
+                return View(customer);
             }
             return View();
         }
@@ -255,10 +426,18 @@ namespace thomasgregmvc.Controllers
                         client.DefaultRequestHeaders.Clear();
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                        HttpResponseMessage response = await client.DeleteAsync($"api/Customers/{customer.Id}");
+                        HttpResponseMessage response = await client.DeleteAsync($"api/CustomersAddresses/DeleteAllAddresses/{customer.Id}");
                         if (response.IsSuccessStatusCode)
                         {
-                            return RedirectToAction("Index", "Home");
+                            response = await client.DeleteAsync($"api/Customers/{customer.Id}");
+                            if (response.IsSuccessStatusCode)
+                            {
+                                return RedirectToAction("Index", "Home");
+                            }
+                            else
+                            {
+                                Error();
+                            }
                         }
                         else
                         {
@@ -272,6 +451,7 @@ namespace thomasgregmvc.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

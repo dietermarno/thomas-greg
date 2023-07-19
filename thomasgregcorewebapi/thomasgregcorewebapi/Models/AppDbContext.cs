@@ -48,11 +48,6 @@ namespace thomasgregcorewebapi.Models
                 entity.Property(e => e.ZipCode)
                     .HasMaxLength(15)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.CustomerAddresses)
-                    .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK__CustomerA__Custo__3D5E1FD2");
             });
 
             modelBuilder.Entity<User>(entity =>
