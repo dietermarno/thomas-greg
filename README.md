@@ -22,8 +22,6 @@ https://localhost:4200/
 
 ## Lista de pendências
 
-▪ Contemplar ação de exclusão de endereços ao excluir um cliente. \
-▪ Ações e views para gerenciamento da lista de endereços a partir das telas de inclusão e alteração. \
 ▪ Criação de stored procedures para ações de inclusão, alteração e exclusão. \
 ▪ Verificar motivo da falha de execução da API em container através de docker compose. \
 ▪ Revisão e padronização de parametrização em todas as aplicações. \
