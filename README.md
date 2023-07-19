@@ -1,5 +1,5 @@
-# Desafio Thomas Greg
-Teste prático Thomas Greg
+# Thomas Greg
+Teste prático de desenvolvimento
 
 Demonstração de cliente MVC suportado por API RestFul com armazenamento em banco de dados relacional Microsoft MS-SQL.
 
