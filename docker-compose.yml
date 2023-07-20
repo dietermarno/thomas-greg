@@ -13,9 +13,9 @@ services:
     networks:
       - dockerhost
   web_api:
-    container_name: wepapi
+    container_name: webapi
     image: dietermarno/thomasgregcorewebapi:dev
-    hostname: wepapi
+    hostname: webapi
     ports:
       - "5000:80"
       - "5001:443"
@@ -27,6 +27,24 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=aspnetapp.pfx
     depends_on:
       - sql
+    networks:
+      - dockerhost
+  web_mvc:
+    container_name: webmvc
+    image: dietermarno/thomasgregmvc:dev
+    hostname: webmvc
+    ports:
+      - "4200:80"
+      - "4201:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=4201
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=R353t3282@
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=aspnetapp.pfx
+    depends_on:
+      - sql
+      - web_api
     networks:
       - dockerhost
 networks:
