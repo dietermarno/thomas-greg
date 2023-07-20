@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using thomasgregcorewebapi.Repositories;
-using thomasgregcorewebapi.Models;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.OpenApi.Models;
+using System.Text;
+using thomasgregcorewebapi.Models;
+using thomasgregcorewebapi.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,7 +68,7 @@ if (app.Environment.IsDevelopment())
     app.UseStatusCodePages();
 }
 
-app.UseAuthentication(); 
+app.UseAuthentication();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();

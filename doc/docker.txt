@@ -22,3 +22,14 @@ docker run  -e "ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true" -e "ASPNETCORE_
 docker run -dt -v "C:\Users\aralb\vsdbg\vs2017u5:/remote_debugger:rw" -v "C:\Users\aralb\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro" -v "C:\Users\aralb\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro" -v "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Sdks\Microsoft.Docker.Sdk\tools\TokenService.Proxy\linux-x64\net7.0:/TokenService.Proxy:ro" -v "C:\projects\thomas-greg\thomasgregcorewebapi\thomasgregcorewebapi:/app" -v "C:\projects\thomas-greg\thomasgregcorewebapi:/src/" -v "C:\Users\aralb\.nuget\packages\:/root/.nuget/fallbackpackages2" -v "C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages:/root/.nuget/fallbackpackages" -e "ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true" -e "ASPNETCORE_ENVIRONMENT=Development" -e "ASPNETCORE_URLS=https://+:443;http://+:80" -e "ASPNETCORE_HTTPS_PORT=5001" -e "DOTNET_USE_POLLING_FILE_WATCHER=1" -e "NUGET_PACKAGES=/root/.nuget/fallbackpackages2" -e "NUGET_FALLBACK_PACKAGES=/root/.nuget/fallbackpackages;/root/.nuget/fallbackpackages2" -p 5000:80 -p 5001:443 -P --name thomasgregcorewebapi --entrypoint tail thomasgregcorewebapi:dev -f /dev/null 
 
 docker run -dt -v "C:\Users\aralb\vsdbg\vs2017u5:/remote_debugger:rw" -v "C:\Users\aralb\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro" -v "C:\Users\aralb\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro" -v "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Sdks\Microsoft.Docker.Sdk\tools\TokenService.Proxy\linux-x64\net7.0:/TokenService.Proxy:ro" -v "C:\projects\thomas-greg\thomasgregmvc\thomasgregmvc:/app" -v "C:\projects\thomas-greg\thomasgregmvc:/src/" -v "C:\Users\aralb\.nuget\packages\:/root/.nuget/fallbackpackages2" -v "C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages:/root/.nuget/fallbackpackages" -e "ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true" -e "ASPNETCORE_ENVIRONMENT=Development" -e "ASPNETCORE_URLS=https://+:443;http://+:80" -e "DOTNET_USE_POLLING_FILE_WATCHER=1" -e "NUGET_PACKAGES=/root/.nuget/fallbackpackages2" -e "NUGET_FALLBACK_PACKAGES=/root/.nuget/fallbackpackages;/root/.nuget/fallbackpackages2" -P --name thomasgregmvc --entrypoint tail thomasgregmvc:dev -f /dev/null 
+
+docker run -p 5000:80 -p 5001:443 -P --name thomasgregcorewebapi -d counter-image
+
+curl --location --request GET 'https://127.0.0.1/api/Health' --header 'Content-Type: application/json' --data '{}'
+curl --location --request GET 'http://127.0.0.1/api/Health' --header 'Content-Type: application/json' --data '{}'
+curl --location --request GET 'https://127.0.0.1:443/api/Health' --header 'Content-Type: application/json' --data '{}'
+
+Criar certificado:
+dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p { password here }
+
+docker tag counter-image dietermarno/thomasgregcorewebapi:dev
