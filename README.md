@@ -19,11 +19,6 @@ No mesmo ambiente, inicie seu navegador internet e digite o seguinte endereço:
 ```bash
 http://localhost:4200/
 ```
-ou 
-
-```bash
-https://localhost:4201/
-```
 
 ## Lista de pendências
 
